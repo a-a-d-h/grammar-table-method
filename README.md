@@ -1,4 +1,4 @@
-# Table Method Grammar
+# Grammar Table Method
 
 A structural framework for mastering English grammar using modular, table-based analysis. This repository contains the documentation and source material for the Table Method.
 
