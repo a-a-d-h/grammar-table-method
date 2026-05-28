@@ -19,6 +19,7 @@ This project is an iterative, "living" project. Development follows these princi
 ### User Responsibility & Disclaimers
 1. **Critical Engagement:** While the author strives for accuracy, this project is an experimental methodology. Users should exercise their own independent judgment and verify grammatical logic against authoritative sources before implementation.
 2. **No Liability:** This system is provided as an educational tool to support—not replace—the user's own analytical process. The authors and contributors are not liable for inaccuracies resulting from the use of this framework.
+3. **Originality & Attribution:** This project strives to generate original, logical frameworks based on the author's own analytical process. While the methodology relies on public knowledge regarding English grammar, any incidental similarity to existing resources is unintentional. The author is committed to ethical content creation and welcomes feedback regarding any necessary attributions if similarities to existing works are identified.
 
 ## Licensing
 This work is licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
