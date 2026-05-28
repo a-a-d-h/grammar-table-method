@@ -3,7 +3,7 @@
 A structural framework for mastering English grammar using modular, table-based analysis. This repository contains the documentation and source material for the Table Method.
 
 ## Documentation
-The core documentation for this project is provided in HTML format. You can find these files in the repository under the root directory.
+The core documentation for this project is provided in HTML format. Please see the [table-method-grammar-analysis.html](table-method-grammar-analysis.html) file.
 
 ## Methodology
 This project is developed through a human-led methodology. For a detailed explanation of the development process and our approach to AI-assisted collaboration, please see the [METHODOLOGY.md](METHODOLOGY.md) file.
