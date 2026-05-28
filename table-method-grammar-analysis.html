@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Method Grammar Analysis - Version: 1.0.0</title>
+    <style>
+        :root {
+            --bg-page: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #334155;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --primary: #1e3a8a;
+            --primary-light: #eff6ff;
+            --primary-border: #bfdbfe;
+            
+            /* Sequential Variables matching baseline */
+            --b1-accent: #16a34a; /* Action Engines (Green) */
+            --b1-bg: #f0fdf4;
+            --b1-border: #bbf7d0;
+            
+            --b2-accent: #2563eb; /* Logic Managers (Blue) */
+            --b2-bg: #f0f9ff;
+            --b2-border: #bae6fd;
+            
+            --b3-accent: #b45309; /* State-Changers & Shift-Helpers (Amber) */
+            --b3-bg: #fffbeb;
+            --b3-border: #fde68a;
+            
+            --thought-bg: #fffbfa;
+            --thought-border: #fed7aa;
+            --thought-text: #ea580c;
+            --genesis-bg: #f5f3ff;
+            --genesis-border: #ddd6fe;
+            --genesis-text: #5b21b6;
+            
+            /* Commander Doctrine Variables */
+            --commander-bg: #f8fafc;
+            --commander-border: #0f172a;
+            --commander-accent: #0f172a;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            max-width: 960px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            padding: 35px;
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .header-container {
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            display: block;
+        }
+
+        h1 {
+            font-size: 24pt;
+            color: var(--text-dark);
+            margin: 0 0 8px 0;
+            font-weight: 800;
+            letter-spacing: -0.75px;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background-color: #f0f9ff;
+            color: #075985;
+            font-size: 9.5pt;
+            font-weight: bold;
+            padding: 5px 12px;
+            border-radius: 6px;
+            border: 1px solid #bae6fd;
+        }
+
+        h2 {
+            font-size: 15pt;
+            color: var(--primary);
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 5px solid var(--primary);
+            padding-left: 12px;
+        }
+
+        h3 {
+            font-size: 12pt;
+            color: var(--text-dark);
+            margin-top: 25px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        p {
+            margin: 0 0 15px 0;
+        }
+
+        /* Script UI Box */
+        .script-box {
+            background-color: #fafafa;
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+        }
+
+        .script-header {
+            font-size: 10pt;
+            font-weight: bold;
+            color: #475569;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 6px;
+        }
+
+        .script-content {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 9.5pt;
+            color: var(--text-dark);
+            white-space: pre-wrap;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 14px;
+            border-radius: 6px;
+            margin: 0;
+            overflow-x: auto;
+        }
+
+        /* Genesis Box */
+        .genesis-box {
+            background-color: var(--genesis-bg);
+            border: 1px solid var(--genesis-border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .genesis-example {
+            background-color: #ffffff;
+            border-left: 4px solid var(--genesis-text);
+            padding: 14px;
+            margin: 15px 0 5px 0;
+            border-radius: 0 6px 6px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        /* Commander Doctrine Core Box */
+        .commander-doctrine-box {
+            background-color: var(--commander-bg);
+            border: 2px solid var(--commander-border);
+            border-radius: 8px;
+            padding: 22px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .commander-badge {
+            background-color: #0f172a;
+            color: #ffffff;
+            font-size: 8.5pt;
+            text-transform: uppercase;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .doctrine-list {
+            margin: 12px 0 0 0;
+            padding-left: 20px;
+            font-size: 10pt;
+        }
+
+        .doctrine-list li {
+            margin-bottom: 8px;
+        }
+
+        .doctrine-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Bucket Cards */
+        .bucket-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.01);
+        }
+        
+        .bucket-card.b1 { background-color: var(--b1-bg); border-color: var(--b1-border); }
+        .bucket-card.b2 { background-color: var(--b2-bg); border-color: var(--b2-border); }
+        .bucket-card.b3 { background-color: var(--b3-bg); border-color: var(--b3-border); }
+
+        .bucket-card-title {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .b1 .bucket-card-title { color: #166534; }
+        .b2 .bucket-card-title { color: #075985; }
+        .b3 .bucket-card-title { color: #92400e; }
+
+        .bucket-meta-grid {
+            margin-top: 10px;
+            font-size: 10pt;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            padding-top: 10px;
+        }
+
+        .meta-label {
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        /* Matrix Tables */
+        .matrix-container {
+            margin-bottom: 30px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .matrix-meta {
+            background-color: #f8fafc;
+            border-bottom: 1px solid #cbd5e1;
+            padding: 10px 14px;
+            font-size: 10pt;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        .matrix-sentence {
+            padding: 12px 14px;
+            background-color: #ffffff;
+            margin: 0;
+            font-style: italic;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 10.5pt;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10pt;
+            background: #ffffff;
+        }
+
+        th {
+            background-color: #334155;
+            color: #ffffff;
+            font-weight: 600;
+            text-align: left;
+            padding: 10px 12px;
+            border: 1px solid #334155;
+            font-size: 9.5pt;
+        }
+
+        td {
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f8fafc;
+        }
+
+        .empty-cell {
+            color: #94a3b8;
+            font-style: italic;
+            font-size: 9pt;
+        }
+
+        .highlight-bucket1 { color: var(--b1-accent); font-weight: bold; }
+        .highlight-bucket2 { color: var(--b2-accent); font-weight: bold; }
+        .highlight-bucket3 { color: var(--b3-accent); font-weight: bold; }
+
+        .thought-process-box {
+            font-size: 9.5pt;
+            color: var(--text-dark);
+            background-color: var(--thought-bg);
+            padding: 14px;
+            border-top: 1px solid var(--thought-border);
+            line-height: 1.5;
+        }
+
+        .thought-process-box strong {
+            color: var(--thought-text);
+        }
+
+        /* Post Discussion Appendix */
+        .discussion-section {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .discussion-item {
+            margin-bottom: 18px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 14px;
+        }
+
+        .discussion-item:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .unit-badge {
+            display: inline-block;
+            background-color: #e0f2fe;
+            color: #0369a1;
+            font-weight: bold;
+            padding: 3px 8px;
+            font-size: 9pt;
+            border-radius: 4px;
+            margin-right: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+        
+        /* Master Footer */
+        .master-footer {
+            margin-top: 45px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 9.5pt;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="card">
+            
+            <div class="header-container">
+                <h1>Table Method Grammar Analysis</h1>
+                <div class="version-badge">Version 1.0.0 (Production Release Baseline)</div>
+            </div>
+
+            <p>Welcome to your optimised workstation dashboard. In this edition, we have officially codified the foundational <strong>Component Analysis Terminology</strong> directly into our signature 5-column grid layout, establishing an unshakeable bridge between grammatical classification and structural mapping. By interleaving explicit structural templates for Existential, Main Verb, and Auxiliary categories alongside our established prepositional logic, the manual now achieves total operational alignment across all parsing environments.</p>
+
+            <h2>1. Stored Configuration Script</h2>
+            <p>Copy and paste this exact payload directly into a fresh workspace window to synchronise Gemini instantly into your preferred parameters:</p>
+            
+            <div class="script-box">
+                <div class="script-header">📋 Session Injection Code Payload</div>
+                <pre class="script-content">Hi Gemini. Please load our grammar study configuration (v1.0.0):
+1. Framework: Table Method with columns [WH-Slot] | [Aux-Slot] | [LHS (Subject)] | [ROOT (Semantic Engine)] | [RHS (Object/Complement)].
+2. The Head Commander Rule: The Aux-Slot is the throne room of the sentence, managing Tense, Polarity, Force, and Modality, fully separate from the ROOT slot.
+3. Verb Classification (The Realigned Three-Bucket Rule):
+   - Bucket 1: Action Engines (run, eat, sleep, catch) -> Core active variants of the Semantic Engine sitting in the ROOT slot; zero command authority; fuses tense implicitly in baseline positive statements.
+   - Bucket 2: Logic Managers/Helpers (do, does, did, can, will, should) -> Pure Appointed Head Commanders operating in the IRREALIS domain (Potential, Logic, Rules, Future Projections); zero semantic value.
+   - Bucket 3: State-Changers & Shift-Helpers / "To Be" Terms (am, is, are, was, were, be, been) -> Absolute Sovereigns operating in the REALIS domain (Existential Verification, Present Fact, Historical Reality). Seize Aux as Main Sovereigns (State) or morph into Aspect Helpers for Bucket 1 continuity.
+4. Response Mode: Two-Layered Execution REQUIRED for all analyses:
+   - Layer 1: The Editor (The Matrix Execution) -> Must output the physical 5-column markdown table grid, isolate tokens precisely, execute raw HTML file updates without truncation, and provide on-the-grid layout notes.
+   - Layer 2: The Architect (The Structural Mechanics) -> Must deliver the deep systems-level linguistic rationale, diagnosing the Irrealis/Realis Semantic Axis, verb bucket constitutional rights (visibility vs. fusion), and structural unit scalability (phrases/clauses moving as single blocks).
+5. Prepositional Logic & Ambiguity Allocation: Prepositional phrases natively gravitate to the RHS block when modifying actions or serving as structural bridges. However, when functioning as noun-bound adjectival modifiers, they bind completely to their head noun—meaning they will seamlessly occupy the LHS block if they are modifying the core Subject noun phrase.</pre>
+            </div>
+
+            <h2>2. The Genesis: Why Formulate the Table Method?</h2>
+            <div class="genesis-box">
+                <p><strong>The Evolution from Dependency Breakdown:</strong> Originally, our study set out to analyse sentences using dependency breakdown frameworks, which isolate grammar by drawing branching tree relationships directly between individual tokens. While powerful, dependency trees can grow incredibly complex and visually overwhelming when sentences undergo logical shifts (such as jumping into questions, passive inversions, or layering tense controllers). To bypass this friction, we engineered the <strong>Table Method</strong> as a cleaner, spatial alternative.</p>
+                
+                <p><strong>The Primacy of the Semantic Engine:</strong> The underlying philosophy of the Table Method is that a sentence is not a chaotic web of lines; it is an organised energetic circuit driven by a central core meaning-maker—the ROOT slot, hereafter designated universally as the <strong>Semantic Engine</strong>. The moment a Semantic Engine is deployed, its inherent conceptual nature exerts a predictable grammatical pull that automatically sets up two distinct operational territories around it:</p>
+                
+                <ul>
+                    <li><strong>The Left-Hand Side (LHS / Subject Territory):</strong> The designated slot for the entity that executes, drives, or acts out the state dictated by the Semantic Engine.</li>
+                    <li><strong>The Right-Hand Side (RHS / Object-Complement Territory):</strong> The designated landing pad for whatever entity receives that action or completes the structural meaning of the Semantic Engine.</li>
+                </ul>
+
+                <div class="genesis-example">
+                    <p style="margin-bottom: 8px; font-weight: bold; color: var(--genesis-text);">Primal Baseline Circuit Example: "The cat chased the mouse."</p>
+                    <p style="margin-bottom: 8px; font-size: 10pt;">Your brain anchors automatically on the central <strong>Semantic Engine</strong>: <strong>chased</strong>. This engine maps out the raw spatial balance fields immediately before any administrative adjustments clutter the framework:</p>
+                    
+                    <div class="table-responsive">
+                        <table style="margin-top: 8px; border: 1px solid var(--genesis-border);">
+                            <thead>
+                                <tr style="background-color: var(--genesis-text); color: #ffffff;">
+                                    <th style="padding: 6px 10px; width: 33%;">LHS (Subject Territory)</th>
+                                    <th style="padding: 6px 10px; width: 34%;">ROOT (Semantic Engine)</th>
+                                    <th style="padding: 6px 10px; width: 33%;">RHS (Object Territory)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 8px 10px;">The cat</td>
+                                    <td style="padding: 8px 10px; font-weight: bold; color: var(--b1-accent);">chased</td>
+                                    <td style="padding: 8px 10px;">the mouse</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p style="margin-top: 8px; margin-bottom: 0; font-size: 9pt; color: #6b21a8; font-style: italic;">Before structural helpers like Aux-Slot or context gates like WH-Slot are ever layered on top, this pure LHS &rarr; ROOT &rarr; RHS core handles the kinetic transfer of meaning seamlessly.</p>
+                </div>
+
+                <p style="margin-top: 15px; margin-bottom: 0;"><strong>The Universal Structural Shield:</strong> By isolating a permanent baseline sequence (<strong>LHS &rarr; ROOT &rarr; RHS</strong>), you create an unshakeable template. No matter how complicated a sentence becomes—even if we insert interrogative variables or flip the entire structural perspective—the absolute spatial orientation of the meaning-carrying Semantic Engine stays intact. The table layout maps these transformations perfectly without ever scrambling the foundational core.</p>
+            </div>
+
+            <h2>3. The Functional Typology of the Three Verb Buckets</h2>
+            
+            <div class="commander-doctrine-box">
+                <span class="commander-badge">👑 The Law of the Head Commander</span>
+                <p style="margin-bottom: 10px; font-weight: bold; color: var(--text-dark);">The Aux-Slot is not an optional layout column; it is the Control Tower of the entire structural circuit.</p>
+                <p style="margin-bottom: 10px; font-size: 10pt; color: var(--text-main);">Every complete clause requires exactly <strong>one</strong> designated token to serve as the <strong>Head Commander</strong>. The Head Commander is stationed exclusively in the <strong>Aux-Slot</strong> to execute three supreme operational parameters:</p>
+                <ul class="doctrine-list">
+                    <li><strong>1. Tense Management (The Time Anchor):</strong> Securing the timeline position (past, present, future) for the entire sequence.</li>
+                    <li><strong>2. Polarity Constraints (Negation Management):</strong> Serving as the physical structural shield to anchor negation tokens (e.g., harbouring the word <em>not</em>).</li>
+                    <li><strong>3. Clause Force Execution (Inversion Management):</strong> Physically moving across the LHS boundary line to initiate questions or focus transformations.</li>
+                </ul>
+                
+                <p style="margin-top: 15px; margin-bottom: 6px; font-weight: bold; color: var(--text-dark);">The Functional Separation: Aux-Slot (Head Commander) vs. ROOT Slot (Semantic Engine)</p>
+                <p style="margin-bottom: 10px; font-size: 10pt;">To avoid systemic confusion, you must track the line item boundary separating these two zones. They partition a clause into <strong>Administrative Status</strong> versus <strong>Semantic Payload</strong>:</p>
+                <ul class="doctrine-list" style="list-style-type: square;">
+                    <li><strong>The Aux-Slot (Head Commander) is Purely Administrative:</strong> It possesses zero inherent physical execution energy. It tracks settings, parameters, and validity constraints. It controls <em>how</em> and <em>when</em> a statement occurs in the timeline, but contains no material action. It is the compiler setting of the clause circuit.</li>
+                    <li><strong>The ROOT Slot houses the Semantic Engine:</strong> It contains the raw kinetic or descriptive value of what is happening (e.g., <em>catch, write, freeze</em>). It dictates the physical landscape of the clause, carving open the structural fields upstream (LHS) for actors and downstream (RHS) for targets. It holds the material volume, but holds zero administrative right to modify settings or process logical parameters.</li>
+                </ul>
+                
+                <p style="margin-top: 12px; margin-bottom: 0; font-size: 9.5pt; font-style: italic; color: #475569;">Our three fundamental verb buckets are categorised not by spelling, but by their systemic legal right to step forward and seize this Head Commander throne.</p>
+            </div>
+
+            <div class="bucket-card b1">
+                <span class="bucket-card-title">■ Bucket 1: Action Engines (run, eat, sleep, catch, write)</span>
+                <p style="margin-bottom: 6px;"><strong>Core Definition:</strong> The active, kinetic variants of the Semantic Engine handling physical, mental, or dynamic conceptual operations.</p>
+                <div class="bucket-meta-grid">
+                    <p style="margin-bottom: 6px;"><span class="meta-label">Systemic Importance:</span> These provide the core kinetic energy of your sentence circuit, exactly like the primary example highlighted in Section 2. They define the semantic payload and dictate exactly what variables are required to populate the Left-Hand Side (who does it) and the Right-Hand Side (what gets hit by it).</p>
+                    <p style="margin-bottom: 0;"><span class="meta-label">Commander Throne Status:</span> <strong>Structurally Submissive.</strong> As a sub-type of the Semantic Engine, Action Engines are strictly forbidden from sitting on the Aux-Slot throne. They are securely confined to the <strong>ROOT slot</strong>. In baseline positive assertions, they compress and fuse their tense parameters implicitly within their suffixes. If a sentence undergoes negation or becomes a question, this variant of the Semantic Engine cannot move or defend itself; it must remain stationary and rely on an administrative Bucket 2 Logic Manager to assume the Head Commander role on its behalf.</p>
+                </div>
+            </div>
+
+            <div class="bucket-card b2">
+                <span class="bucket-card-title">■ Bucket 2: Logic Managers / Helpers (do, does, did, can, will, should)</span>
+                <p style="margin-bottom: 6px;"><strong>Core Definition:</strong> Structural operators designed to establish logical criteria, constraints, potentiality, obligations, or future paths.</p>
+                <div class="bucket-meta-grid">
+                    <p style="margin-bottom: 6px;"><span class="meta-label">The Semantic Axis:</span> <strong>The Irrealis Domain.</strong> Bucket 2 tokens process unmanifested logic, rules, abstract potentials, and projections rather than anchored, concrete history.</p>
+                    <p style="margin-bottom: 6px;"><span class="meta-label">Systemic Importance:</span> These are the administrative gatekeepers of sentence logic. Because they possess <em>zero semantic substance</em> on their own, their entire structural focus is to alter the operational rules of an action downstream. They do not report unmediated facts; they govern abstract parameters (e.g., capability with <em>can</em>, obligation with <em>should</em>, or future projection with <em>will</em>).</p>
+                    <p style="margin-bottom: 0;"><span class="meta-label">Commander Throne Status:</span> <strong>Pure Appointed Head Commanders.</strong> These entities occupy the Aux-Slot exclusively to adjust the clause's logical settings, maintaining control over what *might* occur rather than what is definitively anchored in reality.</p>
+                </div>
+            </div>
+
+            <div class="bucket-card b3">
+                <span class="bucket-card-title">■ Bucket 3: State-Changers & Shift-Helpers / "To Be" Terms (am, is, are, was, were, be, been)</span>
+                <p style="margin-bottom: 6px;"><strong>Core Definition:</strong> The status-based operators of language ruling the domain of <strong>Realis (The Existential Anchor)</strong>. These tokens verify direct reality, identity, or location across the concrete timeline.</p>
+                <div class="bucket-meta-grid">
+                    <p style="margin-bottom: 6px;"><span class="meta-label">The Dual-Identity Rule:</span> <br>
+                        <strong>1. As Main Sovereigns (State-Changers):</strong> When standing entirely alone as the sole verbal element in a clause, they act as the complete Semantic Engine to assert an absolute, unmediated equation of existence or identity (e.g., <em>"The cat is happy"</em> establishes a currently manifested state; <em>"was happy"</em> establishes a verified past historical fact).<br>
+                        <strong>2. As Shift-Helpers (Aspect/Passive Operators):</strong> When paired directly with a downstream active Bucket 1 verb (ending in <em>-ing</em> or as a past participle), they shift functions to serve as Aspect Helpers, injecting that same factual grounding into an active process (e.g., <em>"The cat is hunting"</em> marks a loop of physical reality unfolding right now).
+                    </p>
+                    <p style="margin-bottom: 0;"><span class="meta-label">Commander Throne Status:</span> <strong>Absolute Sovereigns.</strong> Because they deal with existential validation rather than empty logical parameters, they carry intrinsic legal command authority. They pull themselves straight into the Aux-Slot to act as the clause's Head Commander effortlessly.</p>
+                </div>
+            </div>
+
+            <h2>4. Foundational Component Analysis & Core Terminology</h2>
+            <p>The following matrices explicitly define our foundational component analysis terminology, placing definitions onto the physical grid to establish clear architectural boundaries between structural roles before moving into advanced contextual clause environments.</p>
+
+            <div class="matrix-container">
+                <div class="matrix-meta">A. Component Analysis: Existential Logic &mdash; Focus: State/Being (Bucket 3 Sovereign)</div>
+                <p class="matrix-sentence">Analysed Sentence: "The cat is quiet."</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">WH-Slot</th>
+                                <th style="width: 20%;">Aux-Slot (Commander)</th>
+                                <th style="width: 20%;">LHS (Subject)</th>
+                                <th style="width: 25%;">ROOT (Semantic Engine)</th>
+                                <th style="width: 20%;">RHS (Object/Comp)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="empty-cell">&mdash;</td>
+                                <td class="highlight-bucket3">is</td>
+                                <td>The cat</td>
+                                <td class="empty-cell">&mdash;</td>
+                                <td>quiet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="thought-process-box">
+                    <strong>⚙️ Thought Process Strategy &mdash; Existential Baseline:</strong> The term <strong>Existential</strong> defines pure state, presence, and being; it does not track kinetic execution. Here, the token "is" functions as a Bucket 3 Sovereign State-Changer. Because it asserts existential reality rather than physical action, it claims the Aux-Slot throne directly as Head Commander. This leaves the ROOT slot completely empty, while the descriptive complement "quiet" safely populates the RHS.
+                </div>
+            </div>
+
+            <div class="matrix-container">
+                <div class="matrix-meta">B. Component Analysis: Main Verb Logic &mdash; Focus: Core Action Payload (Bucket 1 Engine)</div>
+                <p class="matrix-sentence">Analysed Sentence: "The cat chased the mouse."</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">WH-Slot</th>
+                                <th style="width: 20%;">Aux-Slot (Commander)</th>
+                                <th style="width: 20%;">LHS (Subject)</th>
+                                <th style="width: 25%;">ROOT (Semantic Engine)</th>
+                                <th style="width: 20%;">RHS (Object/Comp)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="empty-cell">&mdash;</td>
+                                <td class="empty-cell" style="font-size: 8.5pt;">[implicit past]</td>
+                                <td>The cat</td>
+                                <td class="highlight-bucket1">chased</td>
+                                <td>the mouse</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="thought-process-box">
+                    <strong>⚙️ Thought Process Strategy &mdash; Main Verb Baseline:</strong> The <strong>Main Verb</strong> delivers the primary semantic action or state payload of the clause. Here, "chased" serves as the primary kinetic driver. Being a Bucket 1 Action Engine, it is structurally submissive and forbidden from occupying the Aux throne. It sits firmly within the ROOT cell as the primary Semantic Engine, fusing its past-tense marker implicitly in this positive baseline statement while pushing its target parameters downstream into the RHS.
+                </div>
+            </div>
+
+            <div class="matrix-container">
+                <div class="matrix-meta">C. Component Analysis: Auxiliary Logic &mdash; Focus: Administrative Logistics (Bucket 3 Shift-Helper)</div>
+                <p class="matrix-sentence">Analysed Sentence: "The cat is hunting."</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">WH-Slot</th>
+                                <th style="width: 20%;">Aux-Slot (Commander)</th>
+                                <th style="width: 20%;">LHS (Subject)</th>
+                                <th style="width: 25%;">ROOT (Semantic Engine)</th>
+                                <th style="width: 20%;">RHS (Object/Comp)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="empty-cell">&mdash;</td>
+                                <td class="highlight-bucket3">is</td>
+                                <td>The cat</td>
+                                <td class="highlight-bucket1">hunting</td>
+                                <td class="empty-cell">&mdash;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="thought-process-box">
+                    <strong>⚙️ Thought Process Strategy &mdash; Auxiliary Baseline:</strong> The term <strong>Auxiliary</strong> refers strictly to components that handle administrative, timeline, and aspectual logistics without carrying the primary kinetic meaning. Looking downstream reveals the continuous active verb "hunting", which establishes "hunting" as the primary Semantic Engine inside the ROOT cell. Consequently, the token "is" is restricted to an auxiliary Shift-Helper role, occupying the Aux-Slot to secure the continuous present timeline weight.
+                </div>
+            </div>
+
+            <h2>5. Structural Mapping Matrix & Clause Environments</h2>
+            <p>Below is the complete structural execution map across nine distinct clause environments, demonstrating the flawless handling of pure actions, statuses, passives, and logical polarity shifts without truncation:</p>
+
+            <div class="matrix-container">
+                <div class="matrix-meta">A. Declarative Baseline &mdash; Focus: Pure Bucket 1 (Action Engine Primacy)</div>
+                <p class="matrix-sentence">Analysed Sentence: "The cat chased the mouse."</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">WH-Slot</th>
+                                <th style="width: 20%;">Aux-Slot (Commander)</th>
+                                <th style="width: 20%;">LHS (Subject)</th>
+                                <th style="width: 25%;">ROOT (Semantic Engine)</th>
+                                <th style="width: 20%;">RHS (Object/Comp)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="empty-cell">&mdash;</td>
+                                <td class="empty-cell" style="font-size: 8.5pt;">[past] <em>implicit</em></td>
+                                <td>The cat</td>
+                                <td class="highlight-bucket1">chased</td>
+                                <td>the mouse</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="thought-process-box">
+                    <strong>⚙️ Thought Process Strategy &mdash; The Pure Kinetic Circuit:</strong> When dealing with a single, standalone active verb in the past or present tense, you are looking at a pure Bucket 1 Action Engine. It holds zero programmatic command authority, meaning it cannot shift coordinates to form questions or support negative operators on its own. Because this statement is a simple positive assertion, the timeline parameter (Past Tense) is temporarily carried <em>implicitly</em> inside the inflected suffix of the engine itself (<em>-ed</em>). This allows the physical Aux-Slot to remain visually clear while the Semantic Engine occupies the ROOT cell completely, driving its actor to the LHS and its target parameters to the RHS.
+                </div>
+            </div>
+
+            <div class="matrix-container">
+                <div class="matrix-meta">B. Declarative Clause &mdash; Focus: Bucket 3 Sovereign (State-Changer Integration)</div>
+                <p class="matrix-sentence">Analysed Sentence: "The cat is happy."</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">WH-Slot</th>
+                                <th style="width: 20%;">Aux-Slot (Commander)</th>
+                                <th style="width: 20%;">LHS (Subject)</th>
+                                <th style="width: 25%;">ROOT (Semantic Engine)</th>
+                                <th style="width: 20%;">RHS (Object/Comp)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="empty-cell">&mdash;</td>
+                                <td class="highlight-bucket3">is</td>
+                                <td>The cat</td>
+                                <td class="empty-cell">&mdash;</td>
+                                <td>happy</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="thought-process-box">
+                    <strong>⚙️ Thought Process Strategy &mdash; The Main Sovereign Test:</strong> Look down the track. Since the word <em>is</em> stands entirely alone without any trailing action tokens, the chameleon 'To Be' activates its primary identity: a Bucket 3 Sovereign State-Changer. It functions as the core Semantic Engine itself. Because it carries absolute structural authority, it claims the Head Commander title, placing itself directly in the <strong>Aux-Slot</strong>. The descriptive complement block (<em>happy</em>) falls downstream to occupy the RHS territory.
+                </div>
+            </div>
+
+            <div class="matrix-container">
+                <div class="matrix-meta">C. Declarative Clause &mdash; Focus: Bucket 3 Shift-Helper (Aspect Controller Mode)</div>
+                <p class="matrix-sentence">Analysed Sentence: "The cat is hunting mice."</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">WH-Slot</th>
+                                <th style="width: 20%;">Aux-Slot (Commander)</th>
+                                <th style="width: 20%;">LHS (Subject)</th>
+                                <th style="width: 25%;">ROOT (Semantic Engine)</th>
+                                <th style="width: 20%;">RHS (Object/Comp)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="empty-cell">&mdash;</td>
+                                <td class="highlight-bucket3">is</td>
+                                <td>The cat</td>
+                                <td class="highlight-bucket1">hunting</td>
+                                <td>mice</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="thought-process-box">
+                    <strong>⚙️ Thought Process Strategy &mdash; The Shift-Helper Recognition:</strong> Look downstream. Notice that <em>is</em> is directly followed by an active verb block carrying the continuous suffix (<em>hunting</em>). This confirms that 'To Be' has modified its role, shifting into an administrative Aspect Helper. It maps directly to the <strong>Aux-Slot</strong> to run timeline settings. The core kinetic energy is transferred to the active Bucket 1 token (<em>hunting</em>), which sits safely inside the ROOT cell as the primary Semantic Engine, dictating its actor parameters upstream (LHS) and target variables downstream (RHS).
+                </div>
+            </div>
+
+            <div class="matrix-container">
+                <div class="matrix-meta">D. Declarative Clause &mdash; Focus: Bucket 2 + Bucket 1 Interaction</div>
+                <p class="matrix-sentence">Analysed Sentence: "The cat can catch mice."</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">WH-Slot</th>
+                                <th style="width: 20%;">Aux-Slot (Commander)</th>
+                                <th style="width: 20%;">LHS (Subject)</th>
+                                <th style="width: 25%;">ROOT (Semantic Engine)</th>
+                                <th style="width: 20%;">RHS (Object/Comp)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="empty-cell">&mdash;</td>
+                                <td class="highlight-bucket2">can</td>
+                                <td>The cat</td>
+                                <td class="highlight-bucket1">catch</td>
+                                <td>mice</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="thought-process-box">
+                    <strong>⚙️ Thought Process Strategy &mdash; Division of Labour:</strong> When multiple verbal tokens pile up, isolate the component that morphs to indicate capacity, permission, or absolute timeline changes (the finite helper). This token is a Bucket 2 Logic Manager&mdash;route it straight to the <strong>Aux-Slot</strong> to assume control of sentence orientation. Once the command layer is occupied, the active Semantic Engine (Bucket 1) is neutralised, dropping naturally into the <strong>ROOT</strong> position in its dictionary baseline form, allowing direct processing of its targets (RHS).
+                </div>
+            </div>
+
+            <div class="matrix-container">
+                <div class="matrix-meta">E. Interrogative Clause (WH- Question) &mdash; Complex Split Environment</div>
+                <p class="matrix-sentence">Analysed Sentence: "Why did the cat sleep?"</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">WH-Slot</th>
+                                <th style="width: 20%;">Aux-Slot (Commander)</th>
+                                <th style="width: 20%;">LHS (Subject)</th>
+                                <th style="width: 25%;">ROOT (Semantic Engine)</th>
+                                <th style="width: 20%;">RHS (Object/Comp)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Why</td>
+                                <td class="highlight-bucket2">did</td>
+                                <td>the cat</td>
+                                <td class="highlight-bucket1">sleep</td>
+                                <td class="empty-cell">&mdash;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="thought-process-box">
+                    <strong>⚙️ Thought Process Strategy &mdash; The Reset-to-Statement Blueprint:</strong> Questions naturally break down linear mapping because elements are pulled out of sequence. To bypass the structural noise, execute a mental translation step: <em>Strip the question parameter and flip the inverted order back into an explicit declarative statement</em> (mentally re-engineer "Why did the cat sleep?" into "The cat did sleep"). Map this active statement blueprint smoothly into its baseline tracks to align the blocks. Once established, pull the Bucket 2 manager ("did") forward past the subject line into the <strong>Aux-Slot</strong> and drop the interrogative variable ("Why") into the initial <strong>WH-Slot</strong>, leaving the Semantic Engine safely behind.
+                </div>
+            </div>
+
+            <div class="matrix-container">
+                <div class="matrix-meta">F. Passive Voice Clause &mdash; Shifted Actor Relationship</div>
+                <p class="matrix-sentence">Analysed Sentence: "The mouse was chased by the cat."</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">WH-Slot</th>
+                                <th style="width: 20%;">Aux-Slot (Commander)</th>
+                                <th style="width: 20%;">LHS (Subject)</th>
+                                <th style="width: 25%;">ROOT (Semantic Engine)</th>
+                                <th style="width: 20%;">RHS (Object/Comp)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="empty-cell">&mdash;</td>
+                                <td class="highlight-bucket3">was</td>
+                                <td>The mouse</td>
+                                <td class="highlight-bucket1">chased</td>
+                                <td>by the cat</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="thought-process-box">
+                    <strong>⚙️ Thought Process Strategy &mdash; The Active-to-Passive Flip-Bridge:</strong> Passive constructions obscure structural positions because the entity in the subject seat is receiving the energy rather than exerting it. To crack this layout, apply the inversion strategy: <strong>Mentally reconstruct the sentence into its active voice equivalent first</strong> (transform "The mouse was chased by the cat" into "The cat chased the mouse"). Map the active variant to instantly confirm the underlying semantic positions: identify the real systemic actor ("The cat") and the baseline target ("The mouse"). Now perform the execution flip: slide the target to the forward <strong>LHS (Subject)</strong> slot, deploy a Bucket 3 state auxiliary ("was") into the <strong>Aux-Slot</strong> to carry the historical timeline weight, lock the modified Semantic Engine ("chased") in the <strong>ROOT</strong> cell, and trail the structural actor within an explicit phrase container in the <strong>RHS</strong>.
+                </div>
+            </div>
+
+            <div class="matrix-container">
+                <div class="matrix-meta">G. Imperative Clause &mdash; Commanded Action Context</div>
+                <p class="matrix-sentence">Analysed Sentence: "Feed the cat now."</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">WH-Slot</th>
+                                <th style="width: 20%;">Aux-Slot (Commander)</th>
+                                <th style="width: 20%;">LHS (Subject)</th>
+                                <th style="width: 25%;">ROOT (Semantic Engine)</th>
+                                <th style="width: 20%;">RHS (Object/Comp)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="empty-cell">&mdash;</td>
+                                <td class="empty-cell">[do]</td>
+                                <td>[You]</td>
+                                <td class="highlight-bucket1">Feed</td>
+                                <td>the cat now</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="thought-process-box">
+                    <strong>⚙️ Thought Process Strategy &mdash; Ghost Element Projection:</strong> Direct commands omit critical cells because the situational context allows them to remain unvoiced. To safely anchor these floating blocks, mentally project the hidden structural machinery back into visibility. Force-expand the phrase "Feed the cat" into its complete logical equation: <strong>"[You] [do] feed the cat."</strong> Map these hidden placeholders into the matrix to preserve structural consistency&mdash;locking the implicit recipient into the <strong>LHS [Subject]</strong> block and the unpronounced structural operator into the <strong>Aux-Slot [Commander]</strong> block, allowing the active Semantic Engine ("Feed") to execute directly.
+                </div>
+            </div>
+
+            <div class="matrix-container">
+                <div class="matrix-meta">H. Declarative Clause (Negative Polarity) &mdash; The Shielding Commander</div>
+                <p class="matrix-sentence">Analysed Sentence: "The cat does not sleep."</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">WH-Slot</th>
+                                <th style="width: 20%;">Aux-Slot (Commander)</th>
+                                <th style="width: 20%;">LHS (Subject)</th>
+                                <th style="width: 25%;">ROOT (Semantic Engine)</th>
+                                <th style="width: 20%;">RHS (Object/Comp)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="empty-cell">&mdash;</td>
+                                <td class="highlight-bucket2">does not</td>
+                                <td>The cat</td>
+                                <td class="highlight-bucket1">sleep</td>
+                                <td class="empty-cell">&mdash;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="thought-process-box">
+                    <strong>⚙️ Thought Process Strategy &mdash; The Shielding Rule:</strong> Negation tokens (like <em>not</em>) require a physical structural shield; they cannot float alone, nor can they attach to a submissive Bucket 1 verb. By pulling the Bucket 2 Manager (<em>does</em>) into the <strong>Aux-Slot</strong>, you create the unified Head Commander (<em>does not</em>) to govern the polarity of the entire clause. This completely protects the active Semantic Engine downstream, allowing <em>sleep</em> to sit in the <strong>ROOT</strong> cell in its pure, dictionary-baseline form, untouched by negative modifiers.
+                </div>
+            </div>
+
+            <div class="matrix-container">
+                <div class="matrix-meta">I. Declarative Clause (Emphatic Force) &mdash; The Promoted Commander</div>
+                <p class="matrix-sentence">Analysed Sentence: "The cat does sleep."</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">WH-Slot</th>
+                                <th style="width: 20%;">Aux-Slot (Commander)</th>
+                                <th style="width: 20%;">LHS (Subject)</th>
+                                <th style="width: 25%;">ROOT (Semantic Engine)</th>
+                                <th style="width: 20%;">RHS (Object/Comp)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="empty-cell">&mdash;</td>
+                                <td class="highlight-bucket2">does</td>
+                                <td>The cat</td>
+                                <td class="highlight-bucket1">sleep</td>
+                                <td class="empty-cell">&mdash;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="thought-process-box">
+                    <strong>⚙️ Thought Process Strategy &mdash; The Emphatic Shift:</strong> In a standard positive statement ("The cat sleeps"), the timeline logic is implicit and fused into the verb. However, to inject emphatic force (to emphasise truth or contradict a claim), you must physically occupy the <strong>Aux-Slot</strong> throne. Promoting a Bucket 2 Helper (<em>does</em>) from a ghost status into a visible Head Commander takes over the tense and person processing. Consequently, the Semantic Engine (<em>sleep</em>) surrenders its '-s' inflection, resting in the <strong>ROOT</strong> cell purely to execute the kinetic action.
+                </div>
+            </div>
+            
+            <h2>6. Prepositional Logic & Bucket Interaction</h2>
+            <div class="genesis-box" style="background-color: #f8fafc; border-color: #cbd5e1;">
+                <p><strong>The Prepositional Allocation Law:</strong> Prepositions are inherently relational markers. Their mapping distribution is determined entirely by whether they bind to an action (<strong>Verb-Bound</strong>) or anchor to an entity (<strong>Noun-Bound</strong>):</p>
+                <ul>
+                    <li><strong>Action-Bound Allocation (RHS Dominated):</strong> When a prepositional phrase modifies or completes the action of the Semantic Engine (ROOT) or serves as an agentive bridge, it strictly gravitates to the <strong>RHS block</strong> as an environmental modifier or a structural bridge.</li>
+                    <li><strong>Noun-Bound Allocation (LHS/RHS Variable):</strong> If a prepositional phrase acts adjectival to define or restrict a noun, it loses its independent trajectory and is "swallowed" into that noun's functional unit. Consequently, if it modifies the Subject, it will sit directly inside the <strong>LHS block</strong>.</li>
+                </ul>
+
+                <h3 style="margin-top: 15px; font-size: 11pt; color: var(--primary);">The Three Left-Hand Side (LHS) Manifestations</h3>
+                <p>Prepositional phrases can explicitly breach or occupy the LHS subject territory under three systemic conditions:</p>
+                <ol>
+                    <li><strong>1. Subject-Bound Adjectival Modifiers (The Structural Swallow):</strong> When a PP restricts a subject noun, the entire cluster maps as a single functional block in the LHS cell (e.g., <em>"The mouse <strong>in the house</strong>..."</em>).</li>
+                    <li><strong>2. Fronted Environmental Modifiers (The Topicalization Shift):</strong> Situational contexts pulled to the absolute front of the circuit for emphasis, resting as a Hanging Left Modifier (e.g., <em>"<strong>In the morning</strong>, the cat sleeps"</em>).</li>
+                    <li><strong>3. Nominal Prepositional Subjects (The Rare Sovereignty):</strong> Spatial descriptions operating directly as existential subjects (e.g., <em>"<strong>Under the bed</strong> is a scary place"</em>).</li>
+                </ol>
+
+                <h3 style="margin-top: 20px; font-size: 11pt; color: var(--primary);">LHS Manifestation Matrix: Structural Grid Mapping</h3>
+
+                <div class="matrix-container" style="border-color: var(--primary-border); margin-top: 15px;">
+                    <div class="matrix-meta" style="background-color: var(--primary-light); color: var(--primary);">LHS Manifestation 1: Subject-Bound Adjectival Modifier (The Structural Swallow)</div>
+                    <p class="matrix-sentence">Analysed Sentence: "The mouse in the house escaped."</p>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">WH-Slot</th>
+                                    <th style="width: 15%;">Aux-Slot (Commander)</th>
+                                    <th style="width: 25%;">LHS (Subject)</th>
+                                    <th style="width: 20%;">ROOT (Semantic Engine)</th>
+                                    <th style="width: 30%;">RHS (Object/Comp)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="empty-cell">&mdash;</td>
+                                    <td class="empty-cell" style="font-size: 8.5pt;">[past] <em>implicit</em></td>
+                                    <td>The mouse <strong>in the house</strong></td>
+                                    <td class="highlight-bucket1">escaped</td>
+                                    <td class="empty-cell">&mdash;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="thought-process-box" style="border-top: 1px solid var(--primary-border); background-color: var(--commander-bg);">
+                        <strong>⚙️ Structural Swallow Rationale:</strong> The prepositional phrase <em>"in the house"</em> functions as an adjectival modifier tightly bound to the head noun <em>"mouse"</em>. It relinquishes its independent syntactic mobility and is completely swallowed by the Level 3 Noun Phrase, forcing the entire unified phrase block to sit inside the <strong>LHS (Subject)</strong> column.
+                    </div>
+                </div>
+
+                <div class="matrix-container" style="border-color: var(--primary-border);">
+                    <div class="matrix-meta" style="background-color: var(--primary-light); color: var(--primary);">LHS Manifestation 2: Fronted Environmental Modifier (The Topicalization Shift)</div>
+                    <p class="matrix-sentence">Analysed Sentence: "In the morning, the cat sleeps."</p>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">WH-Slot</th>
+                                    <th style="width: 15%;">Aux-Slot (Commander)</th>
+                                    <th style="width: 25%;">LHS (Subject)</th>
+                                    <th style="width: 20%;">ROOT (Semantic Engine)</th>
+                                    <th style="width: 30%;">RHS (Object/Comp)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="empty-cell">&mdash;</td>
+                                    <td class="empty-cell" style="font-size: 8.5pt;">[present] <em>implicit</em></td>
+                                    <td><strong>[In the morning]</strong>, the cat</td>
+                                    <td class="highlight-bucket1">sleeps</td>
+                                    <td class="empty-cell">&mdash;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="thought-process-box" style="border-top: 1px solid var(--primary-border); background-color: var(--commander-bg);">
+                        <strong>⚙️ Topicalization Shift Rationale:</strong> The phrase <em>"In the morning"</em> is an environmental modifier fronted for stylistic emphasis. In our Table Method, fronted circumstantial expressions operate as a Hanging Left Modifier. Rather than fragmenting the baseline layout, they map cleanly onto the front flank of the subject territory, occupying the <strong>LHS column</strong> as a prefixed modifier ahead of the true subject noun.
+                    </div>
+                </div>
+
+                <div class="matrix-container" style="border-color: var(--primary-border);">
+                    <div class="matrix-meta" style="background-color: var(--primary-light); color: var(--primary);">LHS Manifestation 3: Nominal Prepositional Subject (The Rare Sovereignty)</div>
+                    <p class="matrix-sentence">Analysed Sentence: "Under the bed is a scary place."</p>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">WH-Slot</th>
+                                    <th style="width: 15%;">Aux-Slot (Commander)</th>
+                                    <th style="width: 25%;">LHS (Subject)</th>
+                                    <th style="width: 20%;">ROOT (Semantic Engine)</th>
+                                    <th style="width: 30%;">RHS (Object/Comp)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="empty-cell">&mdash;</td>
+                                    <td class="highlight-bucket3">is</td>
+                                    <td><strong>Under the bed</strong></td>
+                                    <td class="empty-cell">&mdash;</td>
+                                    <td>a scary place</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="thought-process-box" style="border-top: 1px solid var(--primary-border); background-color: var(--commander-bg);">
+                        <strong>⚙️ Rare Sovereignty Rationale:</strong> In this existential framework, the spatial prepositional phrase <em>"Under the bed"</em> undergoes a functional upgrade, operating directly as the core nominal subject of the sentence. It fully seizes the <strong>LHS column</strong> territory, while the Bucket 3 Sovereign <em>"is"</em> holds the Aux-Slot to link this spatial entity with its descriptive predicate complement downstream in the RHS.
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 25px; font-size: 11pt; color: var(--primary);">Environmental Signals vs. Structural Bridges</h3>
+                <p>Not all prepositions interact with the command structure in the same way. The Table Method divides them into two distinct operational categories:</p>
+                <ul>
+                    <li><strong>Environmental Signals (Location, Time, Instrument):</strong> These prepositions (e.g., <em>in, at, with, under</em>) provide circumstantial context. They do not interact with the legal rights of the Aux-Slot or the semantic core of the verb. They simply append data to the cell they occupy.</li>
+                    <li><strong>Structural Bridges (The Agentive 'By'):</strong> This is a highly specialised usage. When 'by' functions as an agent marker, it actively redistributes the energetic flow of the clause, attempting to catch the original actor that was displaced from the LHS during a passive conversion.</li>
+                </ul>
+
+                <h3 style="margin-top: 15px; font-size: 11pt; color: var(--primary);">Bucket 2 & Bucket 3 Command Interfaces</h3>
+                <p>The operational validity of a Structural Bridge is completely dependent upon which Head Commander occupies the Aux-Slot.</p>
+                <ul>
+                    <li><strong>Bucket 2 Interaction (The Irrealis/Logic Shield):</strong> Bucket 2 commands (<em>will, can, should</em>) deal in abstract logic. Because they do not assert physical state changes on their own, they typically pair with standard <strong>Environmental Signals</strong> downstream (e.g., "The cat <em>will sleep</em> <strong>by the door</strong>"). </li>
+                    <li><strong>Bucket 3 Interaction (The Realis/State Enabler):</strong> The passive agentive 'by' phrase is structurally illegal unless a <strong>Bucket 3 Sovereign</strong> (<em>is, was, be, been</em>) occupies the Aux-Slot. Bucket 3 asserts the existential condition necessary for the passive voice to exist. <em>Without a Bucket 3 token acting as the passive enabler in the command tower, the 'by' phrase in the RHS can only be interpreted as a locational or circumstantial modifier.</em></li>
+                </ul>
+
+                <div class="genesis-example" style="border-left-color: #ea580c;">
+                    <p style="margin-bottom: 8px; font-weight: bold; color: #ea580c;">The Systemic Diagnostic: The Active Flip Test</p>
+                    <p style="font-size: 9.5pt; margin-bottom: 0;">To definitively classify an RHS preposition as an Environmental Signal or a Structural Bridge, attempt to invert the clause into the active voice by moving the prepositional object into the LHS seat:<br><br>
+                    <strong>1. The Bridge Confirmation:</strong> "The mouse was chased <strong>by the cat</strong>" &rarr; "The cat chased the mouse." (Valid translation. <em>By</em> is a Structural Bridge enabled by Bucket 3 'was').<br>
+                    <strong>2. The Environmental Confirmation:</strong> "The cat is sitting <strong>by the door</strong>" &rarr; "The door sits the cat." (Invalid translation. <em>By</em> is purely an Environmental Signal indicating location).</p>
+                </div>
+
+                <h3 style="margin-top: 15px; font-size: 11pt; color: var(--primary);">Bucket Interface Matrix: Prepositional Resolution</h3>
+                
+                <div class="matrix-container" style="margin-top: 15px; border-color: #cbd5e1;">
+                    <div class="matrix-meta" style="background-color: #f8fafc;">A. Bucket 1 Interface &mdash; The Standard Environmental Mod</div>
+                    <p class="matrix-sentence">Analysed Sentence: "The cat chased the mouse into the garden."</p>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">WH-Slot</th>
+                                    <th style="width: 15%;">Aux-Slot</th>
+                                    <th style="width: 20%;">LHS (Subject)</th>
+                                    <th style="width: 20%;">ROOT (Semantic Engine)</th>
+                                    <th style="width: 35%;">RHS (Object/Comp)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="empty-cell">&mdash;</td>
+                                    <td class="empty-cell" style="font-size: 8.5pt;">[implicit past]</td>
+                                    <td>The cat</td>
+                                    <td class="highlight-bucket1">chased</td>
+                                    <td>the mouse <strong>into the garden</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="thought-process-box">
+                        <strong>The Bucket 1 Baseline:</strong> With a structurally submissive Bucket 1 verb fully occupying the ROOT, the prepositional phrase ("into the garden") is purely an <em>Environmental Signal</em> denoting trajectory. It simply stacks onto the RHS object without affecting systemic authority.
+                    </div>
+                </div>
+
+                <div class="matrix-container" style="border-color: #cbd5e1;">
+                    <div class="matrix-meta" style="background-color: #f8fafc;">B. Bucket 2 Interface &mdash; The Irrealis/Logic Shield</div>
+                    <p class="matrix-sentence">Analysed Sentence: "The cat will sleep by the door."</p>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">WH-Slot</th>
+                                    <th style="width: 15%;">Aux-Slot</th>
+                                    <th style="width: 20%;">LHS (Subject)</th>
+                                    <th style="width: 20%;">ROOT (Semantic Engine)</th>
+                                    <th style="width: 35%;">RHS (Object/Comp)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="empty-cell">&mdash;</td>
+                                    <td class="highlight-bucket2">will</td>
+                                    <td>The cat</td>
+                                    <td class="highlight-bucket1">sleep</td>
+                                    <td><strong>by the door</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="thought-process-box">
+                        <strong>The Bucket 2 Restriction:</strong> Bucket 2 commands (<em>will</em>) deal in abstract logic. Because they do not assert physical state changes, they universally pair with standard <em>Environmental Signals</em> downstream. Even though the word "by" is present, the logic shield prevents a passive interpretation. Thus, "by the door" is strictly a locational signal.
+                    </div>
+                </div>
+
+                <div class="matrix-container" style="border-color: #cbd5e1;">
+                    <div class="matrix-meta" style="background-color: #f8fafc;">C. Bucket 3 Interface &mdash; The Realis/State Enabler</div>
+                    <p class="matrix-sentence">Analysed Sentence: "The mouse was chased by the cat."</p>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">WH-Slot</th>
+                                    <th style="width: 15%;">Aux-Slot</th>
+                                    <th style="width: 20%;">LHS (Subject)</th>
+                                    <th style="width: 20%;">ROOT (Semantic Engine)</th>
+                                    <th style="width: 35%;">RHS (Object/Comp)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="empty-cell">&mdash;</td>
+                                    <td class="highlight-bucket3">was</td>
+                                    <td>The mouse</td>
+                                    <td class="highlight-bucket1">chased</td>
+                                    <td><strong>by the cat</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="thought-process-box">
+                        <strong>The Bucket 3 Requirement:</strong> The passive agentive 'by' phrase is structurally illegal unless a Bucket 3 Sovereign occupies the Aux-Slot. Bucket 3 asserts the existential condition necessary for the passive voice to exist. Here, "by the cat" operates fully as a <em>Structural Bridge</em> back to the original actor.
+                    </div>
+                </div>
+
+                <div class="matrix-container" style="border-color: #cbd5e1;">
+                    <div class="matrix-meta" style="background-color: #f8fafc;">D. LHS Integration &mdash; The Subject-Bound Modifier (The Structural Swallow)</div>
+                    <p class="matrix-sentence">Analysed Sentence: "The mouse in the house escaped."</p>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">WH-Slot</th>
+                                    <th style="width: 15%;">Aux-Slot</th>
+                                    <th style="width: 25%;">LHS (Subject)</th>
+                                    <th style="width: 20%;">ROOT (Semantic Engine)</th>
+                                    <th style="width: 30%;">RHS (Object/Comp)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="empty-cell">&mdash;</td>
+                                    <td class="empty-cell" style="font-size: 8.5pt;">[implicit past]</td>
+                                    <td>The mouse <strong>in the house</strong></td>
+                                    <td class="highlight-bucket1">escaped</td>
+                                    <td class="empty-cell">&mdash;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="thought-process-box">
+                        <strong>The Noun-Bound Swallow Theory:</strong> Because "in the house" functions exclusively to restrict and specify *which* mouse is executing the engine, it relinquishes structural independence. The level 3 prepositional phrase is structurally swallowed by the level 3 noun phrase, allowing the entire block to land squarely within the LHS subject territory.
+                    </div>
+                </div>
+            </div>
+
+            <h2>7. Structural Ambiguity & Prepositional Attachment</h2>
+            <div class="genesis-box" style="background-color: #fffbfa; border-color: #fed7aa;">
+                <p>When multiple prepositional phrases stack up in the RHS of a standard baseline sentence, they can create <strong>Structural Ambiguity</strong>. This occurs when it is grammatically unclear exactly which preceding block the prepositional phrase is modifying.</p>
+                
+                <p>In standard structural flow, an RHS prepositional phrase has two potential attachment points:</p>
+                <ol>
+                    <li><strong>Adjectival Attachment:</strong> Modifying the LHS or RHS Noun/Object directly (e.g., "The box <em>[of chocolates]</em>").</li>
+                    <li><strong>Adverbial Attachment:</strong> Pointing backwards to modify the ROOT Semantic Engine (e.g., "fixed the car <em>[with a wrench]</em>").</li>
+                </ol>
+
+                <p>When a sentence ends with a modifier (e.g., "The policeman shot the thief with a gun"), the Table Method dutifully maps the phrase into the RHS. However, grammar alone cannot resolve if the phrase attaches to the thief (he had a gun) or the shooting (the method of the shot). This ambiguity is typically resolved via <em>semantic context</em>, <em>movement tests</em> (shifting the phrase to the front), or <em>substitution tests</em>.</p>
+                
+                <h3 style="margin-top: 15px; font-size: 11pt; color: #ea580c;">The Stress Test: Complex Multi-Phrase Mapping</h3>
+                <p>Below is the ultimate demonstration of the Table Method's stability. Even when a sentence is saturated with deeply stacked prepositional phrases and semantic ambiguity, the foundational five-column matrix never collapses.</p>
+
+                <div class="matrix-container" style="border-color: #fed7aa;">
+                    <div class="matrix-meta" style="background-color: #fff7ed; border-color: #fed7aa; color: #9a3412;">Stress Test Matrix: The Saturated Clause</div>
+                    <p class="matrix-sentence">Analysed Sentence: "The mouse in the house was actively chased by the cat from the outside in a haste."</p>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr style="background-color: #9a3412; color: #ffffff;">
+                                    <th style="width: 10%;">WH-Slot</th>
+                                    <th style="width: 15%;">Aux-Slot</th>
+                                    <th style="width: 25%;">LHS (Subject)</th>
+                                    <th style="width: 20%;">ROOT (Semantic Engine)</th>
+                                    <th style="width: 30%;">RHS (Object/Comp)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="empty-cell">&mdash;</td>
+                                    <td class="highlight-bucket3">was</td>
+                                    <td>The mouse <strong>in the house</strong></td>
+                                    <td class="highlight-bucket1">actively chased</td>
+                                    <td><strong>by the cat</strong> <strong>from the outside</strong> <strong>in a haste</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="thought-process-box" style="border-top-color: #fed7aa;">
+                        <strong>💡 The Architect's Ambiguity Diagnosis:</strong>
+                        <br><br>
+                        <strong>1. The LHS Stability:</strong> The phrase "in the house" is strictly an adjectival modifier bound to "The mouse". The Table Method correctly treats this entire cluster as a single functional block occupying the LHS territory.
+                        <br><br>
+                        <strong>2. The Structural Core:</strong> The Aux-Slot ("was") and the Semantic Engine ("actively chased") form the impenetrable centre, processing the passive inversion and adverbial modifiers seamlessly.
+                        <br><br>
+                        <strong>3. The RHS Ambiguity Cascade:</strong> The RHS is heavily saturated. We know "by the cat" is our Structural Bridge. But what about the remaining phrases? 
+                        <ul style="margin-bottom: 0;">
+                            <li>Does "from the outside" modify the cat (an adjectival attachment indicating origin), or does it modify the chasing (an adverbial attachment indicating the trajectory of the chase)?</li>
+                            <li>Does "in a haste" attach to the cat (the cat's state of being) or the chasing (the manner of the action)?</li>
+                        </ul>
+                        <br>
+                        <em>Conclusion:</em> While semantic context must resolve the exact attachment vectors, the Table Method flawlessly organizes the structural hierarchy. It proves that regardless of how ambiguous the internal relationships become, all trailing modifiers safely resolve into the RHS container without breaking the mechanical operation of the clause.
+                    </div>
+                </div>
+            </div>
+
+            <h2>8. Post-Discussion Appendix: Types of Grammatical Units</h2>
+            <p>To scale your linguistic parsing beyond single-word tokens, you must track the hierarchical scale of language. In the Table Method, <strong>a cell is not restricted to a single word; it is filled by an operational unit acting as a single cohesive block.</strong></p>
+
+            <div class="discussion-section">
+                
+                <div class="discussion-item">
+                    <p><span class="unit-badge">Level 1</span> <strong>The Morpheme (The Sub-Atomic Unit):</strong></p>
+                    The smallest core carrier of meaning or structural modification (e.g., the root <em>"cat"</em>, or the inflectional marker <em>"-s"</em> denoting plural status). In your system, these are handled internally within words to influence how a component maps (e.g., tracking the <em>"-ed"</em> ending to properly register a modified Bucket 1 Semantic Engine).
+                </div>
+
+                <div class="discussion-item">
+                    <p><span class="unit-badge">Level 2</span> <strong>The Word / Lexeme (The Atomic Token):</strong></p>
+                    The base freestanding entry level in language. In isolated scenarios, a single word can claim an entire cell (such as <em>"mice"</em> populating the RHS or <em>"sleep"</em> claiming the ROOT).
+                </div>
+
+                <div class="discussion-item">
+                    <p><span class="unit-badge">Level 3</span> <strong>The Phrase (The Functional Block &mdash; Critical Table Rule):</strong></p>
+                    A cluster of words acting together as a single part of speech, lacking a subject-predicate split of its own. <strong>Crucially, an entire phrase moves together and occupies exactly ONE cell in your matrix.</strong>
+                    <ul>
+                        <li><em>Noun Phrases (NP):</em> "The big, fluffy black cat" contains five words, but functionally acts as a single operational identity. It occupies the <strong>LHS</strong> or <strong>RHS</strong> as a single, un-splittable block.</li>
+                        <li><em>Prepositional Phrases (PP):</em> "By the aggressive street cat" acts collectively as a modification vector in the <strong>RHS</strong> slot.</li>
+                    </ul>
+                </div>
+
+                <div class="discussion-item">
+                    <p><span class="unit-badge">Level 4</span> <strong>The Clause (The Full Grid Circuit):</strong></p>
+                    A structural assembly containing a Subject (LHS) and a structural Verb line (Aux/ROOT). A clause represents a complete iteration of the table method matrix. 
+                    <ul>
+                        <li><em>Independent Clauses:</em> Can stand alone as a self-sustaining sentence ("The cat is sleeping").</li>
+                    </ul>
+                </div>
+
+                <div class="discussion-item">
+                    <p><span class="unit-badge">Level 5</span> <strong>The Sentence (The Complete System):</strong></p>
+                    The ultimate terminal boundary, consisting of one or more coordinated clause grids that resolve your entire communicative intention.
+                </div>
+
+            </div>
+
+            <h2>9. Post-Discussion Appendix: Component Analysis Terminology Reference Table</h2>
+            <p>This master grid serves as an integrated analytical summary, unifying semantic and structural definitions directly alongside their designated execution behaviors under the Three-Bucket Rules:</p>
+            
+            <div class="table-responsive" style="border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden;">
+                <table>
+                    <thead>
+                        <tr style="background-color: #1e3a8a; color: #ffffff;">
+                            <th style="width: 15%; padding: 12px;">Term</th>
+                            <th style="width: 15%; padding: 12px;">Dimension</th>
+                            <th style="width: 30%; padding: 12px;">Definition</th>
+                            <th style="width: 20%; padding: 12px;">Example</th>
+                            <th style="width: 20%; padding: 12px;">Baseline Execution Rule</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: bold; color: var(--b3-accent);">Existential</td>
+                            <td style="font-weight: 500;">Semantic</td>
+                            <td>Defines state, presence, and being; explicitly non-kinetic in core physical layout context.</td>
+                            <td style="font-style: italic;">"The cat <strong>is</strong> quiet."</td>
+                            <td>Governs the core nature of Bucket 3 Sovereigns when deployed independently.</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold; color: var(--b1-accent);">Main Verb</td>
+                            <td style="font-weight: 500;">Structural</td>
+                            <td>Provides the primary operational action, dynamic mental process, or state payload of the clause.</td>
+                            <td style="font-style: italic;">"The cat <strong>chased</strong> the mouse."</td>
+                            <td>Natively occupies the ROOT slot (or Aux-Slot under absolute Sovereign mode exceptions).</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold; color: var(--b2-accent);">Auxiliary</td>
+                            <td style="font-weight: 500;">Structural</td>
+                            <td>Provides pure structural, administrative, aspectual, or timeline logistics to govern another verb.</td>
+                            <td style="font-style: italic;">"The cat <strong>is</strong> hunting."</td>
+                            <td>Stationed exclusively within the Aux-Slot to assert Head Commander parameters over the clause circuit.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="master-footer">
+                <footer>
+                    Methodology Blueprint &bull; Version: 1.0.0<br>
+                    <span style="display: inline-block; margin-top: 5px; color: var(--text-dark); font-weight: bold;">Disclaimer: We're exploring grammar together through this Human-AI collaborative framework. This method is an analytical starting point, not a substitute for your expertise. We encourage you to use your best judgment and verify these logic structures against authoritative resources whenever you need to be absolutely certain.</span>
+                </footer>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
